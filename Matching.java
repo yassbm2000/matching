@@ -3,10 +3,11 @@ public class Matching {
 	HashSet<School> schools;
 	HashSet<Student> students;
 	HashMap<School,HashSet<Student>> match;
+	int[] groups;
 	
 	
 	public Matching(HashSet<School> schools, HashSet<Student> students, HashMap<School,HashSet<Student>> match ){
-		this.schools = schools; this.students = students; this.match = match;
+		this.schools = schools; this.students = students; this.match = match; int[] groups;
 	}
 	
 	public void basiccasematch() {
