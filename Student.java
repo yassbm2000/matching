@@ -14,7 +14,7 @@ public class Student {
 		this.remaining = (LinkedList<School>) preferences.clone(); 
 	}
 	public School nextChoice() {
-		return this.preferences.pop();
+		return this.remaining.pop();
 	}
 	public boolean betterThanNthg(School s) {
 		for(School e : preferences) {
