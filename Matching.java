@@ -10,7 +10,7 @@ public class Matching {
 		this.schools = schools; this.students = students; this.match = match; int[] groups;
 	}
 	
-	public void basiccasematch() {
+	public void basicCaseMatch() {
 	LinkedList<Student> temp = students; // how do I turn a hashset into a list 
 	while ( temp.isNotEmpty()) {
 		Student cur =temp.pop();
