@@ -25,6 +25,11 @@ public class Student {
 		}
 		return true;
 	}
+	
+	public void resetPreferences(){
+		this.remaining = (LinkedList<School>) preferences.clone(); 
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		Student that = (Student) o;
