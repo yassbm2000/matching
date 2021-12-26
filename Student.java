@@ -5,11 +5,13 @@ public class Student {
 	School assignedSchool;
 	HashSet<School> schools;
 	LinkedList<School> preferences;
+	LinkedList<School> remaining;
 	
 	public Student(String name, HashSet<School> schools, LinkedList<School> preferences) {
 		this.name = name;
 		this.schools = schools;
 		this.preferences = preferences;
+		this.remaining = (LinkedList<School>) preferences.clone(); 
 	}
 	public School nextChoice() {
 		return this.preferences.pop();
