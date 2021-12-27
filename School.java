@@ -2,11 +2,12 @@ import java.util.*;
 public class School {
 	String name;
 	int capacity;
-	HashSet<Student> students;
+	HashMap<Integer,Integer> quotas;
+	HashSet<Student> admitted;
 	LinkedList<Student> preferences;
 	
-	public School(String name, int capacity, HashSet<Student> students, LinkedList<Student> preferences) {
-		this.name = name; this.students = students; this.preferences = preferences;
+	public School(String name, int capacity, LinkedList<Student> preferences, HashMap<Integer,Integer> quotas) {
+		this.name = name; this.admitted = new HashSet<Student>(); this.preferences = preferences; this.quotas = quotas;
 	}
 	
 	@Override 
@@ -16,6 +17,7 @@ public class School {
 			return true;
 		return false;
 	}
-	
-	
+	public int compareStudents(Student s1,Student s2) {//returns -1 if s2 is preferred by this school than s1 and 1 otherwise
+		return Integer.compare(this.preferences.indexOf(s2), this.preferences.indexOf(s1));
+	}
 }
