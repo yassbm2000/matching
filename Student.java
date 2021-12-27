@@ -10,7 +10,7 @@ public class Student {
 	public Student(String name,LinkedList<School> preferences,int g) {
 		this.name = name;
 		this.preferences = preferences;
-		this.remaining = preferences.clone();
+		this.remaining = (LinkedList) preferences.clone();
 		this.group = g;
 	}
 	public School nextChoice() {
