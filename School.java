@@ -5,6 +5,7 @@ public class School {
 	HashMap<Integer,Integer> quotas;
 	HashSet<Student> admitted;
 	LinkedList<Student> preferences;
+	HashMap<Integer, HashSet<Student> > admittedInGroup; 
 	
 	public School(String name, int capacity, LinkedList<Student> preferences, HashMap<Integer,Integer> quotas) {
 		this.name = name; this.admitted = new HashSet<Student>(); this.preferences = preferences; this.quotas = quotas;
