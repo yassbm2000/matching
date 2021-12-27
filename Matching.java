@@ -32,6 +32,7 @@ public class Matching {
 	}
 	
 	public void groupQuotaMatch() {
+		
 		this.match = new HashMap<School,HashSet<Student>>; //reset the match 
 		LinkedList<Student> temp = new LinkedList<Student>(students); 
 		for ( Student s: students){ s.resetPreference();} // reset preferences ( may have been modified from last matching ) 
@@ -39,28 +40,28 @@ public class Matching {
 			Student cur =temp.pop();
 			School sco = cur.nextChoice();
 			int g = cur.group;
-			if (sco.admittedInGroup(g).size() < sco.quotas.get(g) && cur.betterThanNthg(sco) ){
+			if (sco.admittedInGroup.get(g).size() < sco.quotas.get(g) && cur.betterThanNthg(sco) ){ //added to schools a hashmap field " admitted In group "
 				if ( sco.admitted.size() < sco.capacity ) {
-				sco.admitted.add(cur); cur.assignedSchool = sco; ;} // add to schools a field " assigned from group" 
-		} else {
+				sco.admitted.add(cur); cur.assignedSchool = sco; ;}  
+		} else { //if there is no vacant place
 				for ( Student s: sco.admitted){ 
 				if (sco.compareStudents(cur,s) > 0 ){
 					sco.admitted.remove(s);temp.add(s); 
-					sco.admitted.add(cur); sco.admittedInGroup(g).add(cur);
+					sco.admitted.add(cur); sco.admittedInGroup.add(g,cur);
 					cur.assignedSchool = sco;
 					break;
-				}
+				} //shitty linear worst case search
 			} 
 			
 		       }
-			else  {
-				for ( Student s: sco.admittedInGroup(g)){
+			else  { //if the quota for the group is exceeded
+				for ( Student s: sco.admittedInGroup.get(g)){
 					if ( sco.compareStudent(cur,s) > 0 ) { 
 					sco.admitted.remove(s); temp.add(s);
-					sco.admitted.add(cur); sco.admittedInGroup(g).add(cur);
-					sco.admittedInGroup(g).remove(s); 
+					sco.admitted.add(cur); sco.admittedInGroup.add(g,cur);
+					sco.admittedInGroup.get(g).remove(s); 
 					break;
-					}
+					} // shitty linear worst case search
 				}
 			}
 			
@@ -69,3 +70,4 @@ public class Matching {
 	}
 		
 }
+// question: what's the "assignedSchool" field in class Student used for ? 
