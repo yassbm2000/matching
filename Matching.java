@@ -10,7 +10,7 @@ public class Matching {
 	}
 	
 	public void basicCaseMatch() {
-		LinkedList<Student> temp = new LinkedList<Student>(students); // how do I turn a hashset into a list 
+		LinkedList<Student> temp = new LinkedList<Student>(students); 
 		while ( !temp.isEmpty()) {
 			Student cur =temp.pop();
 			School sco = cur.nextChoice();
@@ -19,6 +19,7 @@ public class Matching {
 				for(Student s : sco.admitted){
 					if(sco.compareStudents(cur,s)>0) {
 						sco.admitted.remove(s);
+						temp.add(s); // add the fired student to the waiting pile
 						sco.admitted.add(cur);
 						break;
 					}
@@ -28,4 +29,14 @@ public class Matching {
 		for(School s: this.schools)
 			this.match.put(s, s.admitted);
 	}
+	
+	public void groupQuotaMatch() {
+		LinkedList<Student> temp = new LinkedList<Student>(students); 
+		for ( Student s: students){ s.resetPreference();} // reset preferences ( may have been modified from last matching ) 
+		while ( !temp.isEmpty()) {
+			Student cur =temp.pop();
+			School sco = cur.nextChoice();
+			if (sco.
+		
+		
 }
