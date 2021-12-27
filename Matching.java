@@ -20,6 +20,7 @@ public class Matching {
 					if(sco.compareStudents(cur,s)>0) {
 						sco.admitted.remove(s);
 						sco.admitted.add(cur);
+						break;
 					}
 				}
 			}
