@@ -40,14 +40,14 @@ public class Matching {
 			Student cur =temp.pop();
 			School sco = cur.nextChoice();
 			int g = cur.group;
-			if (sco.admittedInGroup.get(g).size() < sco.quotas.get(g) && cur.betterThanNthg(sco) ){ //added to schools a hashmap field " admitted In group "
+			if (sco.admittedInGroup.get(g).size() < sco.quotas.get(g) && cur.betterThanNthg(sco) ){ //added to School a hashmap field " admitted In group "
 				if ( sco.admitted.size() < sco.capacity ) {
 				sco.admitted.add(cur); cur.assignedSchool = sco; ;}  
 		} else { //if there is no vacant place
 				for ( Student s: sco.admitted){ 
 				if (sco.compareStudents(cur,s) > 0 ){
 					sco.admitted.remove(s);temp.add(s); 
-					sco.admitted.add(cur); sco.admittedInGroup.add(g,cur);
+					sco.admitted.add(cur); sco.admittedInGroup.put(g,cur);
 					cur.assignedSchool = sco;
 					break;
 				} //shitty linear worst case search
@@ -58,7 +58,7 @@ public class Matching {
 				for ( Student s: sco.admittedInGroup.get(g)){
 					if ( sco.compareStudent(cur,s) > 0 ) { 
 					sco.admitted.remove(s); temp.add(s);
-					sco.admitted.add(cur); sco.admittedInGroup.add(g,cur);
+					sco.admitted.add(cur); sco.admittedInGroup.put(g,cur);
 					sco.admittedInGroup.get(g).remove(s); 
 					break;
 					} // shitty linear worst case search
@@ -66,6 +66,8 @@ public class Matching {
 			}
 			
 		}
+		for(School s: this.schools)
+		{this.match.put(s, s.admitted);}
 		
 	}
 		
