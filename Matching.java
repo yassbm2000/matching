@@ -14,7 +14,7 @@ public class Matching {
 		while ( !temp.isEmpty()) {
 			Student cur =temp.pop();
 			School sco = cur.nextChoice();
-			if ( cur.betterThanNthg(sco) && sco.admitted.size() < sco.capacity) {sco.admitted.add(cur);}
+			if ( cur.betterThanNthg(sco) && sco.admitted.size() < sco.capacity) {sco.admitted.add(cur); cur.assignedSchool = sco;}
 			else if(sco.admitted.size()>=sco.capacity){
 				for(Student s : sco.admitted){
 					if(sco.compareStudents(cur,s)>0) {
