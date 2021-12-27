@@ -2,19 +2,19 @@ import java.util.*;
 public class Student {
 	String name;
 	double cost;
+	int group;
 	School assignedSchool;
-	HashSet<School> schools;
 	LinkedList<School> preferences;
 	LinkedList<School> remaining;
 	
-	public Student(String name, HashSet<School> schools, LinkedList<School> preferences) {
+	public Student(String name,LinkedList<School> preferences,int g) {
 		this.name = name;
-		this.schools = schools;
 		this.preferences = preferences;
-		this.remaining = (LinkedList<School>) preferences.clone(); 
+		this.remaining = preferences.clone();
+		this.group = g;
 	}
 	public School nextChoice() {
-		return this.remaining.pop();
+		return this.preferences.pop();
 	}
 	public boolean betterThanNthg(School s) {
 		for(School e : preferences) {
@@ -25,11 +25,6 @@ public class Student {
 		}
 		return true;
 	}
-	
-	public void resetPreferences(){
-		this.remaining = (LinkedList<School>) preferences.clone(); 
-	}
-	
 	@Override
 	public boolean equals(Object o) {
 		Student that = (Student) o;
