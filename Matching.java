@@ -72,4 +72,6 @@ public class Matching {
 	}
 		
 }
-// question: what's the "assignedSchool" field in class Student used for ? 
+// question: what's the "assignedSchool" field in class Student used for ? A : the school that has been assigned to the student
+// i'm skipping the test questions for now 
+
