@@ -14,7 +14,7 @@ public class Student {
 		this.group = g;
 	}
 	public School nextChoice() {
-		return this.preferences.pop();
+		return this.remaining.pop();
 	}
 	public boolean betterThanNthg(School s) {
 		for(School e : preferences) {
@@ -25,6 +25,8 @@ public class Student {
 		}
 		return true;
 	}
+	public void resetPreference(){ this.remaining = (LinkedList) this.preferences.clone();}
+		
 	@Override
 	public boolean equals(Object o) {
 		Student that = (Student) o;
