@@ -93,9 +93,7 @@ public class Matching {
 	public void fixedPoint(HashSet<HashSet<Student>> constraint){
 		
 		   this.match = new HashMap<School,HashSet<Student>>; //reset the match 
-		   HashMap<School, int> p = new HashMap<School, int>();  // build a random cutoff profile for starters
-		   HashMap<School, HashSet<Student>> demand= new HashMap<School, HashSet<Student>>();
-		   
+		   HashMap<School, int> p = new HashMap<School, int>();  // build a random cutoff profile for starters		   
 		   int k =1;
 		   for (School s : this.schools){p.put(s,k); k++;} // just a random cutoff profile as our starting point
 		   boolean fixedPointIndicator = true;
