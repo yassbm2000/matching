@@ -70,6 +70,68 @@ public class Matching {
 		{this.match.put(s, s.admitted);}
 		
 	}
+	//first attempt at task 7
+	public HashSet<Student> demand(School s, HashMap<School, int>p):{
+		
+		HashSet<Student> demand = new HashSet<Student>;
+		for ( Student i: this.students ){
+		boolean favoriteSchool; //leave that here
+		if ( s.compareStudents(i,s[s.preference.size()-p.get(s)]) >= 0 && i.betterThanNthg(s)  && favoriteschool ) {
+				demand.add(i)
+				}
+			return demand;
+		}
+		
+		
+		
+		
+		;} // leave it for later, trying to encode a demand function 
+	          // may be better to build a table or a hashmap so as not to compute the same value more than we actually need, but keep in mind that
+	         // it's going to be very costly memory-wise : for each school and each cutoff profile an entire hashset of students...
+	
+	// Also didnt know what the fuck they meant by " a function that encodes arbitrairy constraints", so I described the constraint a subset of 2^I
+	public void fixedPoint(HashSet<HashSet<Student>> constraint){
+		
+		   this.match = new HashMap<School,HashSet<Student>>; //reset the match 
+		   HashMap<School, int> p = new HashMap<School, int>();  // build a random cutoff profile for starters
+		   HashMap<School, HashSet<Student>> demand= new HashMap<School, HashSet<Student>>();
+		   
+		   int k =1;
+		   for (School s : this.schools){p.put(s,k); k++;} // just a random cutoff profile as our starting point
+		   boolean fixedPointIndicator = true;
+		   while (!fixedPointIndicator){  //iterate until you land on a fixed point, you're guaranteed to -eventually lots of iterations....-
+			   fixedPointIndicator = true;
+			   for (School s: schools){
+				   if (!constraint.contains(demand(s,p)){  // dont even know if that's a thing
+					  p.get(s)++; fixedPointIndicator = false; } //question: does p.get(s)++ actually modify the object ? 
+				       }
+				       
+				       } //now that you got your fixed point p, derive the matching from it
+			
+		
+		for (School s: this.schools){ this.match.put(s, demand(s,p));}
+				       
+		}
+					   
+				   
+		   
+		
+		
+		
+		
+		
+		
+	
+		
+		
+		
+		
+		
+		
+		
+	}	
+		
+		
 		
 }
 // question: what's the "assignedSchool" field in class Student used for ? A : the school that has been assigned to the student
