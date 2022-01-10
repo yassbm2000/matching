@@ -89,7 +89,7 @@ public class Matching {
 	          // may be better to build a table or a hashmap so as not to compute the same value more than we actually need, but keep in mind that
 	         // it's going to be very costly memory-wise : for each school and each cutoff profile an entire hashset of students...
 	
-	// Also didnt know what the fuck they meant by " a function that encodes arbitrairy constraints", so I described the constraint a subset of 2^I
+	// Also didnt know what the fuck they meant by " a function that encodes arbitrairy constraints", so I described the constraint as a subset of 2^I
 	public void fixedPoint(HashSet<HashSet<Student>> constraint){
 		
 		   this.match = new HashMap<School,HashSet<Student>>; //reset the match 
