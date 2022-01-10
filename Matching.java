@@ -85,7 +85,7 @@ public class Matching {
 		
 		
 		
-		;} // leave it for later, trying to encode a demand function 
+		 // leave it for later, trying to encode a demand function 
 	          // may be better to build a table or a hashmap so as not to compute the same value more than we actually need, but keep in mind that
 	         // it's going to be very costly memory-wise : for each school and each cutoff profile an entire hashset of students...
 	
