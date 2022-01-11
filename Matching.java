@@ -74,17 +74,23 @@ public class Matching {
 	public HashSet<Student> demand(School s, HashMap<School, int>p):{
 		
 		HashSet<Student> demand = new HashSet<Student>;
+		ArrayList<Student> preference_Array = new ArrayList<>(s.preferences()); // so that we can access elements by their index 
 		for ( Student i: this.students ){
-		boolean favoriteSchool; //leave that here
-		if ( s.compareStudents(i,s[s.preference.size()-p.get(s)]) >= 0 && i.betterThanNthg(s)  && favoriteschool ) {
-				demand.add(i)
+		
+		boolean favoriteSchool;
+		for (School sco: this.schools){
+			ArrayList<Student> local_preference_Array = new ArrayList<>(sco.preferences());
+			if (sco.compareStudents(i,local_preference_Array[sco.capacity -p.get(sco)]) >=0 && i.compareSchools(sco,s) >=0){ favoriteSchool = false; break;}
+		} //add a comparison method "compareSchools" to Student
+		if ( s.compareStudents(i,preference_Array[s.capacity-p.get(s)]) >= 0 && i.betterThanNthg(s)  && favoriteschool ) {
+				demand.add(i);
 				}
 			return demand;
 		}
 		
 		
-		
-		
+		//idea: maybe add a new class " cutoff profile"
+			
 		 // leave it for later, trying to encode a demand function 
 	          // may be better to build a table or a hashmap so as not to compute the same value more than we actually need, but keep in mind that
 	         // it's going to be very costly memory-wise : for each school and each cutoff profile an entire hashset of students...
@@ -96,11 +102,11 @@ public class Matching {
 		   HashMap<School, int> p = new HashMap<School, int>();  // build a random cutoff profile for starters		   
 		   int k =1;
 		   for (School s : this.schools){p.put(s,k); k++;} // just a random cutoff profile as our starting point
-		   boolean fixedPointIndicator = true;
-		   while (!fixedPointIndicator){  //iterate until you land on a fixed point, you're guaranteed to -eventually lots of iterations....-
+		   boolean fixedPointIndicator = false;
+		   while (fixedPointIndicator==false){  //iterate until you land on a fixed point, you're guaranteed to -eventually lots of iterations....-
 			   fixedPointIndicator = true;
 			   for (School s: schools){
-				   if (!constraint.contains(demand(s,p)){  // dont even know if that's a thing
+				   if (!constraint.contains(demand(s,p))){  // dont even know if that's a thing
 					  p.get(s)++; fixedPointIndicator = false; } //question: does p.get(s)++ actually modify the object ? 
 				       }
 				       
