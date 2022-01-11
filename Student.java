@@ -26,7 +26,9 @@ public class Student {
 		return true;
 	}
 	public void resetPreference(){ this.remaining = (LinkedList) this.preferences.clone();}
-		
+	public int compareSchools(School s1, School s2){
+		return Integer.compare(this.preferences.indexOf(s2), this.preferences.indexOf(s1));
+	}
 	@Override
 	public boolean equals(Object o) {
 		Student that = (Student) o;
