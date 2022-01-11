@@ -100,13 +100,12 @@ public class Matching {
 		
 		   this.match = new HashMap<School,HashSet<Student>>; //reset the match 
 		   HashMap<School, int> p = new HashMap<School, int>();  // build a random cutoff profile for starters		   
-		   int k =1;
-		   for (School s : this.schools){p.put(s,k); k++;} // just a random cutoff profile as our starting point
+		   for (School s : this.schools){p.put(s,1);}// just a random cutoff profile as our starting point
 		   boolean fixedPointIndicator = false;
 		   while (fixedPointIndicator==false){  //iterate until you land on a fixed point, you're guaranteed to -eventually lots of iterations....-
 			   fixedPointIndicator = true;
 			   for (School s: schools){
-				   if (!constraint.contains(demand(s,p))){  // dont even know if that's a thing
+				   if (!constraint.contains(this.demand(s,p))){  // dont even know if that's a thing
 					  p.get(s)++; fixedPointIndicator = false; } //question: does p.get(s)++ actually modify the object ? 
 				       }
 				       
