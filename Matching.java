@@ -85,6 +85,7 @@ public class Matching {
 		if ( s.compareStudents(i,preference_Array[s.capacity-p.get(s)]) >= 0 && i.betterThanNthg(s)  && favoriteschool ) {
 				demand.add(i);
 				}
+		}
 			return demand;
 		}
 		
@@ -115,8 +116,29 @@ public class Matching {
 		for (School s: this.schools){ this.match.put(s, demand(s,p));}
 				       
 		}
-					   
-				   
+	
+	public void fourFifthsRule(School s){
+		int n = groups.length();
+		int[] count = int[n];
+		int p = s.preferences.size();
+		// build a priority queue with all groups being initially with equal maximal priority;
+		// priority according to decreasing (count/S)*(I/g) i.e most urgent group is the furthest from the desired ratio.
+		for (int k =0, k<p, k++) {
+			e=s.preferences[k];
+			g=e.group;
+			if (count[g] <= (4/5)*(g.size()/students.size())*schools.size()){
+				count[g]++; 
+				// update g's priority;
+			}
+			else if ( count[g] > (4/5)*(g.size()/students.size())*schools.size() && count[g] <= (6/5)*(g.size()/students.size())*schools.size()){
+				//gp = Queue.maxpriority();
+				// fetch closest student in gp from current position in preferences, call it ep;
+				// swap(e,ep) in s.preferences; 
+				//count[gp]++; count[g]--; 
+			       // update priorities accordingly;
+			} 
+		}
+	}
 		   
 		
 		
@@ -132,7 +154,7 @@ public class Matching {
 		
 		
 		
-	}	
+		
 		
 		
 		
