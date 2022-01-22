@@ -7,27 +7,15 @@ public class Student {
 	LinkedList<School> preferences;
 	LinkedList<School> remaining;
 	
-	public Student(String name,LinkedList<School> preferences,int g) {
+	public Student(String name,int g, double cost) {
 		this.name = name;
-		this.preferences = preferences;
-		this.remaining = (LinkedList) preferences.clone();
+		this.preferences = new LinkedList<School>();
 		this.group = g;
-	}
-	public School nextChoice() {
-		return this.remaining.pop();
-	}
-	public boolean betterThanNthg(School s) {
-		for(School e : preferences) {
-			if(s == null)
-				return false;
-			else if(e.equals(s))
-				break;
-		}
-		return true;
+		this.cost = cost;
 	}
 	public void resetPreference(){ this.remaining = (LinkedList) this.preferences.clone();}
-	public int compareSchools(School s1, School s2){
-		return Integer.compare(this.preferences.indexOf(s2), this.preferences.indexOf(s1));
+	public School nextChoice() {
+		return this.preferences.pop();
 	}
 	@Override
 	public boolean equals(Object o) {
