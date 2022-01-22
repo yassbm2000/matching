@@ -1,3 +1,4 @@
+package matching;
 import java.util.*;
 public class Matching {
 	HashSet<School> schools;
@@ -19,7 +20,7 @@ public class Matching {
 				Iterator<Student> it = sco.admitted.iterator();
 				while(it.hasNext()){
 					Student s = it.next();
-					if(sco.compare(cur,s)) {
+					if(sco.compareStudents(cur,s)) {
 						cur.assignedSchool = sco;
 						it.remove();
 						break;
@@ -45,7 +46,7 @@ public class Matching {
 				sco.admitted.add(cur); cur.assignedSchool = sco; }  
 				else { //if there is no vacant place
 					for ( Student s: sco.admitted){ 
-						if (sco.compareStudents(cur,s) > 0 ){
+						if (sco.compareStudents(cur,s) ){
 							sco.admitted.remove(s);temp.add(s); 
 							sco.admitted.add(cur);
 							if(sco.admittedInGroup.get(g) == null) {
@@ -62,7 +63,7 @@ public class Matching {
 			}
 			else { //if the quota for the group is exceeded
 				for ( Student s: sco.admittedInGroup.get(g)){
-					if ( sco.compareStudents(cur,s) > 0 ) { 
+					if ( sco.compareStudents(cur,s) ) { 
 					sco.admitted.remove(s); temp.add(s);
 					sco.admitted.add(cur);
 					sco.admittedInGroup.get(g).add(cur);
@@ -97,18 +98,16 @@ public class Matching {
 		
 	}
 	//first attempt at task 7
-	public HashSet<Student> demand(School s, HashMap<School, int>p):{
+	public HashSet<Student> demand(School s, HashMap<School, Integer>p){
 		
-		HashSet<Student> demand = new HashSet<Student>;
-		ArrayList<Student> preference_Array = new ArrayList<>(s.preferences()); // so that we can access elements by their index 
+		HashSet<Student> demand = new HashSet<Student>();
 		for ( Student i: this.students ){
 		
-		boolean favoriteSchool;
+		boolean favoriteSchool=true;
 		for (School sco: this.schools){
-			ArrayList<Student> local_preference_Array = new ArrayList<>(sco.preferences());
-			if (sco.compareStudents(i,local_preference_Array[sco.capacity -p.get(sco)]) >=0 && i.compareSchools(sco,s) >=0){ favoriteSchool = false; break;}
+			if (sco.compareStudents(i,sco.preferences.get(sco.capacity -p.get(sco)))  && i.compareSchools(sco,s)){favoriteSchool = false; break;}
 		} //add a comparison method "compareSchools" to Student
-		if ( s.compareStudents(i,preference_Array[s.capacity-p.get(s)]) >= 0 && i.betterThanNthg(s)  && favoriteschool ) {
+		if ( s.compareStudents(i,s.preferences.get(s.capacity-p.get(s)))   && favoriteSchool ) {
 				demand.add(i);
 				}
 		}
@@ -122,18 +121,20 @@ public class Matching {
 	          // may be better to build a table or a hashmap so as not to compute the same value more than we actually need, but keep in mind that
 	         // it's going to be very costly memory-wise : for each school and each cutoff profile an entire hashset of students...
 	
-	// Also didnt know what the fuck they meant by " a function that encodes arbitrairy constraints", so I described the constraint as a subset of 2^I
+	// Also didnt know what is meant by " a function that encodes arbitrairy constraints", so I described the constraint as a subset of 2^I
 	public void fixedPoint(HashSet<HashSet<Student>> constraint){
 		
-		   this.match = new HashMap<School,HashSet<Student>>; //reset the match 
-		   HashMap<School, int> p = new HashMap<School, int>();  // build a random cutoff profile for starters		   
+		   this.match = new HashMap<School,HashSet<Student>>(); //reset the match 
+		   HashMap<School, Integer> p = new HashMap<School, Integer>();  // build a random cutoff profile for starters		   
 		   for (School s : this.schools){p.put(s,1);}// just a random cutoff profile as our starting point
 		   boolean fixedPointIndicator = false;
 		   while (fixedPointIndicator==false){  //iterate until you land on a fixed point, you're guaranteed to -eventually lots of iterations....-
 			   fixedPointIndicator = true;
 			   for (School s: schools){
-				   if (!constraint.contains(this.demand(s,p))){  // dont even know if that's a thing
-					  p.get(s)++; fixedPointIndicator = false; } //question: does p.get(s)++ actually modify the object ? 
+				   if (!constraint.contains(this.demand(s,p))){ 
+					  int ps = p.get(s);ps++;
+					  p.replace(s, ps);
+					  fixedPointIndicator = false; } 
 				       }
 				       
 				       } //now that you got your fixed point p, derive the matching from it
@@ -144,47 +145,47 @@ public class Matching {
 		}
 	
 	public void fourFifthsRule(School s){
-		int n = groups.length();
-		int[] count = int[n];
+		int n = groups.length;
+		int[] count = new int[n];
+		int initCapacity=n;
 		int p = s.preferences.size();
-		// build a priority queue with all groups being initially with equal maximal priority;
+		PriorityQueue<Integer> pq = new PriorityQueue<Integer>(initCapacity, new Comparator<Integer>() {
+		    public int compare(Integer g1, Integer g2) {
+		        return Integer.compare((count[g1]/s.capacity)*(p/s.groupSize(g1)), (count[g2]/s.capacity)*(p/s.groupSize(g2)));
+		    }
+		});
+		for (int g=0; g<n; g++) {pq.add(g);}
+		
 		// priority according to decreasing (count/S)*(I/g) i.e most urgent group is the furthest from the desired ratio.
-		for (int k =0, k<p, k++) {
-			e=s.preferences[k];
-			g=e.group;
-			if (count[g] <= (4/5)*(g.size()/students.size())*schools.size()){
+		for (int k=0; k<p; k++) {
+			
+			
+			Student e=s.preferences.get(k);
+			int g=e.group;
+			if (count[g] <= (4/5)*(s.groupSize(g)/students.size())*schools.size()){
 				count[g]++; 
 				// update g's priority;
 			}
-			else if ( count[g] > (4/5)*(g.size()/students.size())*schools.size() && count[g] <= (6/5)*(g.size()/students.size())*schools.size()){
-				//gp = Queue.maxpriority();
+			else if ( count[g] > (4/5)*(s.groupSize(g)/students.size())*schools.size() && count[g] <= (6/5)*(s.groupSize(g)/students.size())*schools.size()){
+				int gp = pq.queue[0];
 				// fetch closest student in gp from current position in preferences, call it ep;
-				// swap(e,ep) in s.preferences; 
-				//count[gp]++; count[g]--; 
+				for (int i = k; k<p; k++) {
+					if (s.preferences.get(i).group==gp) {
+						Student eg=s.preferences.get(i);
+						// swap(e,ep) in s.preferences;
+						Student temp = e;
+						s.preferences.set(k, eg);
+						s.preferences.set(i, temp);
+						break;
+					}
+				}
+				 
+				count[gp]++; count[g]--; 
 			       // update priorities accordingly;
 			} 
 		}
 	}
-		   
-		
-		
-		
-		
-		
-		
-	
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		   		
 }
-// question: what's the "assignedSchool" field in class Student used for ? A : the school that has been assigned to the student
-// i'm skipping the test questions for now 
+
 
