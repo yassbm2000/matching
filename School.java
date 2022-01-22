@@ -22,7 +22,7 @@ public class School {
 	public int compareStudents(Student s1,Student s2) {//returns -1 if s2 is preferred by this school than s1 and 1 otherwise
 		return Integer.compare(this.preferences.indexOf(s2), this.preferences.indexOf(s1));
 	}
-	public boolean compare(Student s1, Student s2) {
+	public boolean compareStudents(Student s1, Student s2) {
 		boolean greaterThan = true;
 		for(Student e : preferences) {
 			if(e.equals(s1)) {
