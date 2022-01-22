@@ -1,64 +1,71 @@
 import java.util.*;
 public class Matching {
 	HashSet<School> schools;
-	HashSet<Student> students;
+	LinkedList<Student> students;
 	HashMap<School,HashSet<Student>> match;
 	int[] groups;
 	
-	public Matching(HashSet<School> schools, HashSet<Student> students){
+	public Matching(HashSet<School> schools, LinkedList<Student> students){
 		this.schools = schools; this.students = students; this.match = new HashMap<School, HashSet<Student>>(); int[] groups;
 	}
 	
 	public void basicCaseMatch() {
-		LinkedList<Student> temp = new LinkedList<Student>(students); 
+		LinkedList<Student> temp = students;
 		while ( !temp.isEmpty()) {
 			Student cur =temp.pop();
 			School sco = cur.nextChoice();
-			if ( cur.betterThanNthg(sco) && sco.admitted.size() < sco.capacity) {sco.admitted.add(cur); cur.assignedSchool = sco;}
+			if (sco.admitted.size() < sco.capacity) {sco.admitted.add(cur); cur.assignedSchool = sco;}
 			else if(sco.admitted.size()>=sco.capacity){
-				for(Student s : sco.admitted){
-					if(sco.compareStudents(cur,s)>0) {
-						sco.admitted.remove(s);
-						temp.add(s); // add the "fired" student to the waiting pile
-						sco.admitted.add(cur);
+				Iterator<Student> it = sco.admitted.iterator();
+				while(it.hasNext()){
+					Student s = it.next();
+					if(sco.compare(cur,s)) {
 						cur.assignedSchool = sco;
+						it.remove();
 						break;
 					}
 				}
+				sco.admitted.add(cur);
 			}
 		}
 		for(School s: this.schools)
 			this.match.put(s, s.admitted);
 	}
-	
 	public void groupQuotaMatch() {
 		
-		this.match = new HashMap<School,HashSet<Student>>; //reset the match 
+		this.match = new HashMap<School,HashSet<Student>>(); //reset the match 
 		LinkedList<Student> temp = new LinkedList<Student>(students); 
-		for ( Student s: students){ s.resetPreference();} // reset preferences ( may have been modified from last matching ) 
+		for (Student s: students){ s.resetPreference();} // reset preferences ( may have been modified from last matching ) 
 		while ( !temp.isEmpty()) {
 			Student cur =temp.pop();
 			School sco = cur.nextChoice();
 			int g = cur.group;
-			if (sco.admittedInGroup.get(g).size() < sco.quotas.get(g) && cur.betterThanNthg(sco) ){ //added to School a hashmap field " admitted In group "
+			if ( sco.admittedInGroup.isEmpty() || sco.admittedInGroup.get(g).size() < sco.quotas.get(g) ){ //added to School a hashmap field " admitted In group "
 				if ( sco.admitted.size() < sco.capacity ) {
-				sco.admitted.add(cur); cur.assignedSchool = sco; ;}  
-		} else { //if there is no vacant place
-				for ( Student s: sco.admitted){ 
-				if (sco.compareStudents(cur,s) > 0 ){
-					sco.admitted.remove(s);temp.add(s); 
-					sco.admitted.add(cur); sco.admittedInGroup.put(g,cur);
-					cur.assignedSchool = sco;
-					break;
-				} //shitty linear worst case search
-			} 
-			
-		       }
-			else  { //if the quota for the group is exceeded
+				sco.admitted.add(cur); cur.assignedSchool = sco; }  
+				else { //if there is no vacant place
+					for ( Student s: sco.admitted){ 
+						if (sco.compareStudents(cur,s) > 0 ){
+							sco.admitted.remove(s);temp.add(s); 
+							sco.admitted.add(cur);
+							if(sco.admittedInGroup.get(g) == null) {
+								HashSet<Student> grp = new HashSet<Student>();
+								grp.add(cur); sco.admittedInGroup.put(g, grp);
+							}
+							else
+								sco.admittedInGroup.get(g).add(cur);
+							cur.assignedSchool = sco;
+							break;
+						} //shitty linear worst case search
+					}
+				}
+			}
+			else { //if the quota for the group is exceeded
 				for ( Student s: sco.admittedInGroup.get(g)){
-					if ( sco.compareStudent(cur,s) > 0 ) { 
+					if ( sco.compareStudents(cur,s) > 0 ) { 
 					sco.admitted.remove(s); temp.add(s);
-					sco.admitted.add(cur); sco.admittedInGroup.put(g,cur);
+					sco.admitted.add(cur);
+					sco.admittedInGroup.get(g).add(cur);
 					sco.admittedInGroup.get(g).remove(s); 
 					break;
 					} // shitty linear worst case search
@@ -66,8 +73,27 @@ public class Matching {
 			}
 			
 		}
-		for(School s: this.schools)
-		{this.match.put(s, s.admitted);}
+		for(School s: this.schools) {this.match.put(s, s.admitted);}
+		
+	}
+	@Override
+	public String toString() {
+		String res = "";
+		Matching matching = (Matching) this;
+		for(School s : matching.schools) {
+			boolean first = true;
+			res += s.name + " <- [";
+			for(Student e : s.admitted) {
+				if(first) {
+					res+= e.name;
+					first = false;
+				}
+				else
+					res+= ", " + e.name;
+			}
+			res+= "]" + "\n";
+		}
+		return res;
 		
 	}
 	//first attempt at task 7
