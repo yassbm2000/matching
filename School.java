@@ -4,11 +4,12 @@ public class School {
 	int capacity;
 	HashMap<Integer,Integer> quotas;
 	HashSet<Student> admitted;
+	HashMap<Integer, HashSet<Student> > admittedInGroup;
 	LinkedList<Student> preferences;
-	HashMap<Integer, HashSet<Student> > admittedInGroup; 
 	
-	public School(String name, int capacity, LinkedList<Student> preferences, HashMap<Integer,Integer> quotas) {
-		this.name = name; this.admitted = new HashSet<Student>(); this.preferences = preferences; this.quotas = quotas;
+	public School(String name, int capacity, HashMap<Integer,Integer> quotas) {
+		this.name = name; this.capacity = capacity; this.admitted = new HashSet<Student>(); this.preferences = new LinkedList<Student>(); this.quotas = quotas;
+		this.admittedInGroup = new HashMap<Integer, HashSet<Student> > ();
 	}
 	
 	@Override 
@@ -20,6 +21,20 @@ public class School {
 	}
 	public int compareStudents(Student s1,Student s2) {//returns -1 if s2 is preferred by this school than s1 and 1 otherwise
 		return Integer.compare(this.preferences.indexOf(s2), this.preferences.indexOf(s1));
+	}
+	public boolean compare(Student s1, Student s2) {
+		boolean greaterThan = true;
+		for(Student e : preferences) {
+			if(e.equals(s1)) {
+				greaterThan = true;
+				break;
+			}
+			else if(e.equals(s2)) {
+				greaterThan = false;
+				break;
+			}	
+		}
+		return greaterThan;
 	}
 	public int groupSize(int g){//returns the number of students belonging to group g
 		int count = 0;
@@ -38,7 +53,6 @@ public class School {
 				this.preferences.remove(e);
 		}
 	}
-	
 	//fair rankings
 	public void fairRanking(){
 		//the goal is to apply the 4/5 rules to every school's preferences
@@ -58,5 +72,4 @@ public class School {
 			}
 		}
 	}
-			
 }
