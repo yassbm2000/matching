@@ -25,4 +25,18 @@ public class Student {
 		}
 		return false;
 	}
+	public boolean compareSchools(School s1, School s2) {
+		boolean greaterThan = true;
+		for(School e : this.preferences) {
+			if(e.equals(s1)) {
+				greaterThan = true;
+				break;
+			}
+			else if(e.equals(s2)) {
+				greaterThan = false;
+				break;
+			}	
+		}
+		return greaterThan;
+}
 }
