@@ -97,7 +97,6 @@ public class Matching {
 		return res;
 		
 	}
-	//first attempt at task 7
 	public HashSet<Student> demand(School s, HashMap<School, Integer>p){
 		
 		HashSet<Student> demand = new HashSet<Student>();
@@ -122,7 +121,7 @@ public class Matching {
 	         // it's going to be very costly memory-wise : for each school and each cutoff profile an entire hashset of students...
 	
 	// Also didnt know what is meant by " a function that encodes arbitrairy constraints", so I described the constraint as a subset of 2^I
-	public void fixedPoint(HashSet<HashSet<Student>> constraint){
+	public void fixedPoint(Constraint c){
 		
 		   this.match = new HashMap<School,HashSet<Student>>(); //reset the match 
 		   HashMap<School, Integer> p = new HashMap<School, Integer>();  // build a random cutoff profile for starters		   
@@ -131,7 +130,7 @@ public class Matching {
 		   while (fixedPointIndicator==false){  //iterate until you land on a fixed point, you're guaranteed to -eventually lots of iterations....-
 			   fixedPointIndicator = true;
 			   for (School s: schools){
-				   if (!constraint.contains(this.demand(s,p))){ 
+				   if (c.constraint(this.demand(s,p))){ 
 					  int ps = p.get(s);ps++;
 					  p.replace(s, ps);
 					  fixedPointIndicator = false; } 
@@ -144,16 +143,24 @@ public class Matching {
 				       
 		}
 	
+		
+	
+	
 	public void fourFifthsRule(School s){
 		int n = groups.length;
 		int[] count = new int[n];
+		
 		int initCapacity=n;
 		int p = s.preferences.size();
-		PriorityQueue<Integer> pq = new PriorityQueue<Integer>(initCapacity, new Comparator<Integer>() {
+		class GroupComparator implements Comparator<Integer>{
+			
+			
 		    public int compare(Integer g1, Integer g2) {
 		        return Integer.compare((count[g1]/s.capacity)*(p/s.groupSize(g1)), (count[g2]/s.capacity)*(p/s.groupSize(g2)));
 		    }
-		});
+		
+	}
+		PriorityQueue<Integer> pq = new PriorityQueue<Integer>(initCapacity, new GroupComparator());
 		for (int g=0; g<n; g++) {pq.add(g);}
 		
 		// priority according to decreasing (count/S)*(I/g) i.e most urgent group is the furthest from the desired ratio.
@@ -166,8 +173,8 @@ public class Matching {
 				count[g]++; 
 				// update g's priority;
 			}
-			else if ( count[g] > (4/5)*(s.groupSize(g)/students.size())*schools.size() && count[g] <= (6/5)*(s.groupSize(g)/students.size())*schools.size()){
-				int gp = pq.queue[0];
+			else if ( count[g] > (4/5)*(s.groupSize(g)/students.size())*s.capacity ){
+				int gp = pq.peek();
 				// fetch closest student in gp from current position in preferences, call it ep;
 				for (int i = k; k<p; k++) {
 					if (s.preferences.get(i).group==gp) {
@@ -185,6 +192,7 @@ public class Matching {
 			} 
 		}
 	}
+		   		
 		   		
 }
 
