@@ -1,5 +1,5 @@
 package matching;
 import java.util.*;
 public abstract class Constraint {
-	abstract boolean constraint(HashSet<Student> h);
+	abstract boolean constraint(School s, HashSet<Student> h);
 }
