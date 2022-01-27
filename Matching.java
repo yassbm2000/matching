@@ -104,9 +104,10 @@ public class Matching {
 		
 		boolean favoriteSchool=true;
 		for (School sco: this.schools){
-			if (sco.compareStudents(i,sco.preferences.get(sco.capacity -p.get(sco)))  && i.compareSchools(sco,s)){favoriteSchool = false; break;}
+			if (sco.compareStudents(i,sco.preferences.get(sco.preferences.size() -p.get(sco)))  && i.compareSchools(sco,s))
+			{favoriteSchool = false; }break;
 		} //add a comparison method "compareSchools" to Student
-		if ( s.compareStudents(i,s.preferences.get(s.capacity-p.get(s)))   && favoriteSchool ) {
+		if ( s.compareStudents(i,s.preferences.get(s.preferences.size()-p.get(s)))   && favoriteSchool ) {
 				demand.add(i);
 				}
 		}
@@ -130,8 +131,10 @@ public class Matching {
 		   while (fixedPointIndicator==false){  //iterate until you land on a fixed point, you're guaranteed to -eventually lots of iterations....-
 			   fixedPointIndicator = true;
 			   for (School s: schools){
-				   if (c.constraint(this.demand(s,p))){ 
-					  int ps = p.get(s);ps++;
+				   if (!c.constraint(s,this.demand(s,p))){ 
+					  int ps = p.get(s);
+					  if (ps==s.preferences.size()) {ps=1;}
+					  else {ps++;}
 					  p.replace(s, ps);
 					  fixedPointIndicator = false; } 
 				       }
@@ -192,7 +195,6 @@ public class Matching {
 			} 
 		}
 	}
-		   		
 		   		
 }
 
