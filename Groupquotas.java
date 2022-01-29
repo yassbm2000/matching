@@ -6,15 +6,15 @@ public class Groupquotas extends Constraint {
 
 	@Override
 	boolean constraint(School s, HashSet<Student> h) {
-		boolean cap = h.size() < s.capacity;
-		boolean quot = true;
-		for (int g=0; g< s.quotas.size(); g++) {
-			if (s.groupSize(g)>s.quotas.get(g)) {
-				return false;
+		boolean cap = h.size() <= s.capacity; //capacity constraint
+		boolean quota = true;
+		for (Integer g=0; g< s.quotas.size(); g++) {
+			if (s.admittedInGroup.get(g)!=null && s.admittedInGroup.get(g).size()>s.quotas.get(g)) {
+				System.out.println(s.admittedInGroup.get(g).size()); quota =false; break;
 			}
 			
 		}
-		return cap && quot;
+		return cap && quota;
 
 		
 	}
