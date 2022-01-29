@@ -1,3 +1,4 @@
+package matching;
 import java.util.*;
 public class School {
 	String name;
@@ -19,9 +20,7 @@ public class School {
 			return true;
 		return false;
 	}
-	public int compareStudents(Student s1,Student s2) {//returns -1 if s2 is preferred by this school than s1 and 1 otherwise
-		return Integer.compare(this.preferences.indexOf(s2), this.preferences.indexOf(s1));
-	}
+	
 	public boolean compareStudents(Student s1, Student s2) {
 		boolean greaterThan = true;
 		for(Student e : preferences) {
@@ -37,11 +36,7 @@ public class School {
 		return greaterThan;
 	}
 	public int groupSize(int g){//returns the number of students belonging to group g
-		int count = 0;
-		for(Student e : this.preferences){
-			if(e.group == g) {count++;}
-		}
-		return count;
+		return this.admittedInGroup.get(g).size();
 	}
 	public void truncate() {
 		boolean a = false;
