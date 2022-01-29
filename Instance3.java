@@ -51,6 +51,10 @@ public class Instance3 {
 		Instance2 test1 = new Instance2(20);
 		test1.match.groupQuotaMatch();
 		System.out.println(test1.match.toString());
+		Capacity c = new Capacity();
+		test1.match.fixedPoint(c);
+		System.out.println("Fixed point approach");
+		System.out.println(test1.match.toString());
 	}
 
 }
