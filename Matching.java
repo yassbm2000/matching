@@ -22,9 +22,9 @@ public class Matching {
 					Student s = it.next();
 					if(sco.compareStudents(cur,s)) {
 						cur.assignedSchool = sco;
-						it.remove();
+						it.remove(); 
 						break;
-					}
+					} students.add(cur);
 				}
 				sco.admitted.add(cur);
 			}
@@ -57,7 +57,7 @@ public class Matching {
 								sco.admittedInGroup.get(g).add(cur);
 							cur.assignedSchool = sco;
 							break;
-						} //shitty linear worst case search
+						} // linear worst case search
 					}
 				}
 			}
@@ -69,7 +69,7 @@ public class Matching {
 					sco.admittedInGroup.get(g).add(cur);
 					sco.admittedInGroup.get(g).remove(s); 
 					break;
-					} // shitty linear worst case search
+					} //  linear worst case search
 				}
 			}
 			
@@ -97,6 +97,7 @@ public class Matching {
 		return res;
 		
 	}
+	
 	public HashSet<Student> demand(School s, HashMap<School, Integer>p){
 		
 		HashSet<Student> demand = new HashSet<Student>();
@@ -104,13 +105,17 @@ public class Matching {
 		
 		boolean favoriteSchool=true;
 		for (School sco: this.schools){
-			if (sco.compareStudents(i,sco.preferences.get(sco.preferences.size() -p.get(sco)))  && i.compareSchools(sco,s))
-			{favoriteSchool = false; }break;
-		} //add a comparison method "compareSchools" to Student
+			if ((!s.equals(sco)) && sco.compareStudents(i,sco.preferences.get(sco.preferences.size() -p.get(sco)))  && i.compareSchools(sco,s) )
+			{favoriteSchool = false;break;} 
+		}//add a comparison method "compareSchools" to Student
 		if ( s.compareStudents(i,s.preferences.get(s.preferences.size()-p.get(s)))   && favoriteSchool ) {
-				demand.add(i);
+				demand.add(i); 
+			    
+				
 				}
 		}
+		
+		
 			return demand;
 		}
 		
@@ -121,28 +126,42 @@ public class Matching {
 	          // may be better to build a table or a hashmap so as not to compute the same value more than we actually need, but keep in mind that
 	         // it's going to be very costly memory-wise : for each school and each cutoff profile an entire hashset of students...
 	
-	// Also didnt know what is meant by " a function that encodes arbitrairy constraints", so I described the constraint as a subset of 2^I
-	public void fixedPoint(Constraint c){
+		public void fixedPoint(Constraint c){
+			for ( School s : this.schools) {s.admittedInGroup=new HashMap<Integer,HashSet<Student>>();}
+			// réinitialisation
 		
 		   this.match = new HashMap<School,HashSet<Student>>(); //reset the match 
-		   HashMap<School, Integer> p = new HashMap<School, Integer>();  // build a random cutoff profile for starters		   
-		   for (School s : this.schools){p.put(s,1);}// just a random cutoff profile as our starting point
+		   HashMap<School, Integer> p = new HashMap<School, Integer>(); 		   
+		   for (School s : this.schools){p.put(s,1);}// just an arbitrary cutoff profile as our starting point
 		   boolean fixedPointIndicator = false;
-		   while (fixedPointIndicator==false){  //iterate until you land on a fixed point, you're guaranteed to -eventually lots of iterations....-
+		   while (fixedPointIndicator==false){  //iterate until you land on a fixed point, you're guaranteed to 
 			   fixedPointIndicator = true;
+			   
 			   for (School s: schools){
-				   if (!c.constraint(s,this.demand(s,p))){ 
+				   
+				   if (!c.constraint(s,this.demand(s,p))){
+					   
 					  int ps = p.get(s);
 					  if (ps==s.preferences.size()) {ps=1;}
 					  else {ps++;}
-					  p.replace(s, ps);
-					  fixedPointIndicator = false; } 
+					  p.put(s,ps);
+					  fixedPointIndicator = false;}
+				   
+				   s.admitted=demand(s,p);
+				    for (Student i: s.admitted) {
+				    	if (s.admittedInGroup.get(i.group)==null) {HashSet<Student> tempo = new HashSet<Student>();
+				    	tempo.add(i); s.admittedInGroup.put(i.group, tempo);} 
+				    	else { s.admittedInGroup.get(i.group).add(i);}
+				    	// beware of null pointers
 				       }
+				   
 				       
-				       } //now that you got your fixed point p, derive the matching from it
-			
-		
-		for (School s: this.schools){ this.match.put(s, demand(s,p));}
+				       } //now that you got your fixed point p, derive the matching from it	
+			    }
+		   for (School s: schools){
+				this.match.put(s, demand(s,p));
+
+				}
 				       
 		}
 	
