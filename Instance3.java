@@ -11,8 +11,11 @@ public class Instance3 {
 	public Instance3(int n) {
 		LinkedList<Student> students = new LinkedList<Student>();
 		this.rd = new Random();
-		int m = (int) 0.9*n;
+		double ke = Math.floor(0.9*n);
+		int m = (int)ke;
+		
 		HashMap<Integer,Integer> quotas = new HashMap<Integer,Integer>();
+		quotas.put(1, m/4); quotas.put(2, m/4); quotas.put(3, m/4); quotas.put(4,m/4); //the groups are {1,2}
 		quotas.put(1, m/4); quotas.put(2, m/4); quotas.put(3, m/4); quotas.put(4,m/4); //the groups are {1,2}
 		School s1 = new School("s1",n/4,quotas); School s2 = new School("s2",n/4,quotas);
 		HashSet<School> schools = new HashSet<School>(); schools.add(s1); schools.add(s2);
