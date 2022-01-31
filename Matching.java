@@ -41,13 +41,15 @@ public class Matching {
 			Student cur =temp.pop();
 			School sco = cur.nextChoice();
 			int g = cur.group;
-			if ( sco.admittedInGroup.isEmpty() || sco.admittedInGroup.get(g).size() < sco.quotas.get(g) ){ //added to School a hashmap field " admitted In group "
+			if ( sco.admittedInGroup.isEmpty() || sco.admittedInGroup.get(g).size() < sco.quotas.get(g) || sco.admittedInGroup.get(g)== null ){ //added to School a hashmap field " admitted In group "
 				if ( sco.admitted.size() < sco.capacity ) {
 				sco.admitted.add(cur); cur.assignedSchool = sco; }  
 				else { //if there is no vacant place
 					for ( Student s: sco.admitted){ 
 						if (sco.compareStudents(cur,s) ){
-							sco.admitted.remove(s);temp.add(s); 
+							sco.admitted.remove(s);
+							Iterator<School> it = s.remaining.iterator();
+							if ( it.hasNext()) {temp.add(s);}
 							sco.admitted.add(cur);
 							if(sco.admittedInGroup.get(g) == null) {
 								HashSet<Student> grp = new HashSet<Student>();
@@ -129,32 +131,44 @@ public class Matching {
 		public void fixedPoint(Constraint c){
 			for ( School s : this.schools) {s.admittedInGroup=new HashMap<Integer,HashSet<Student>>();}
 			// réinitialisation
-		
 		   this.match = new HashMap<School,HashSet<Student>>(); //reset the match 
 		   HashMap<School, Integer> p = new HashMap<School, Integer>(); 		   
 		   for (School s : this.schools){p.put(s,1);}// just an arbitrary cutoff profile as our starting point
+		   
+		   
+		   
+		   
+		   int count = 0;
 		   boolean fixedPointIndicator = false;
-		   while (fixedPointIndicator==false){  //iterate until you land on a fixed point, you're guaranteed to 
+		   while (fixedPointIndicator==false ){  //iterate until you land on a fixed point, you're guaranteed to 
+			   count ++;
+			   
 			   fixedPointIndicator = true;
 			   
 			   for (School s: schools){
-				   
-				   if (!c.constraint(s,this.demand(s,p))){
-					   
-					  int ps = p.get(s);
-					  if (ps==s.preferences.size()) {ps=1;}
-					  else {ps++;}
-					  p.put(s,ps);
-					  fixedPointIndicator = false;}
-				   
+				   s.admittedInGroup=new HashMap<Integer,HashSet<Student>>();
 				   s.admitted=demand(s,p);
-				    for (Student i: s.admitted) {
-				    	if (s.admittedInGroup.get(i.group)==null) {HashSet<Student> tempo = new HashSet<Student>();
-				    	tempo.add(i); s.admittedInGroup.put(i.group, tempo);} 
-				    	else { s.admittedInGroup.get(i.group).add(i);}
+				    for ( Student i: s.admitted) {
+				    	int gi = i.group;
+				    	if (s.admittedInGroup.get(gi)==null) {HashSet<Student> tempo = new HashSet<Student>();
+				    	tempo.add(i); s.admittedInGroup.put(gi, tempo);} 
+				    	else { HashSet<Student> temphash = s.admittedInGroup.get(i.group);
+				    	temphash.add(i); s.admittedInGroup.put(gi, temphash);
+				    	}
+				    	
 				    	// beware of null pointers
 				       }
 				   
+				   if (!c.constraint(s,this.demand(s,p))){ //verify if the constraint is met
+					  int ps = p.get(s);
+					  if (ps==s.preferences.size()) {ps=1;}
+					  else {ps++;}
+					  p.put(s,ps); //modify the cutoff
+					  fixedPointIndicator = false;} //that was not a fixed point
+				   
+				   s.admitted=demand(s,p);
+				   
+				    
 				       
 				       } //now that you got your fixed point p, derive the matching from it	
 			    }
@@ -162,6 +176,7 @@ public class Matching {
 				this.match.put(s, demand(s,p));
 
 				}
+		  
 				       
 		}
 	
@@ -214,6 +229,24 @@ public class Matching {
 			} 
 		}
 	}
+	
+	
+	public boolean verify() {//check if matchig satisfies 4/5 rule
+		boolean fairness = true;
+		for (School s: this.schools) {
+		for ( Student e: s.admitted) {
+			int g = e.group;
+			
+			if ( s.admittedInGroup.get(g) != null 
+				&& s.admittedInGroup.get(g).size() <= (6/5)*(s.groupSize(g)/s.preferences.size())*e.preferences.size()
+				&& s.admittedInGroup.get(g).size() >= (4/5)*(s.groupSize(g)/s.preferences.size())*e.preferences.size()) 
+			{fairness = false; break;}
+ 		}
+	}
+		return fairness;
+		   		
+		
+}
 		   		
 }
 
