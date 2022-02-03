@@ -12,66 +12,78 @@ public class Matching {
 	
 	public void basicCaseMatch() {
 		LinkedList<Student> temp = students;
-		while ( !temp.isEmpty()) {
+		for (Student s: students){ s.resetPreference();}
+		while (!temp.isEmpty()) {
 			Student cur =temp.pop();
 			School sco = cur.nextChoice();
 			if (sco.admitted.size() < sco.capacity) {sco.admitted.add(cur); cur.assignedSchool = sco;}
 			else if(sco.admitted.size()>=sco.capacity){
+				Student s = null;
 				Iterator<Student> it = sco.admitted.iterator();
 				while(it.hasNext()){
-					Student s = it.next();
-					if(sco.compareStudents(cur,s)) {
+					s = it.next();
+					if(sco.compare(cur,s)) {
 						cur.assignedSchool = sco;
-						it.remove(); 
+						it.remove();
+						if(!s.remaining.isEmpty())
+							temp.add(s);
 						break;
-					} students.add(cur);
+					}
 				}
 				sco.admitted.add(cur);
+				sco.admitted.remove(s);
 			}
 		}
-		for(School s: this.schools)
+		for(School s: this.schools) {
+			for(Student i : s.admitted)
+				i.assignedSchool = s;
 			this.match.put(s, s.admitted);
+		}
 	}
 	public void groupQuotaMatch() {
-		
 		this.match = new HashMap<School,HashSet<Student>>(); //reset the match 
 		LinkedList<Student> temp = new LinkedList<Student>(students); 
 		for (Student s: students){ s.resetPreference();} // reset preferences ( may have been modified from last matching ) 
-		while ( !temp.isEmpty()) {
+		while (!temp.isEmpty()) {
 			Student cur =temp.pop();
 			School sco = cur.nextChoice();
 			int g = cur.group;
-			if ( sco.admittedInGroup.isEmpty() || sco.admittedInGroup.get(g).size() < sco.quotas.get(g) || sco.admittedInGroup.get(g)== null ){ //added to School a hashmap field " admitted In group "
+			if ( sco.admittedInGroup.isEmpty() || sco.admittedInGroup.get(g)==null || sco.admittedInGroup.get(g).size() < sco.quotas.get(g) ){ //added to School a hashmap field " admitted In group "
 				if ( sco.admitted.size() < sco.capacity ) {
 				sco.admitted.add(cur); cur.assignedSchool = sco; }  
 				else { //if there is no vacant place
-					for ( Student s: sco.admitted){ 
-						if (sco.compareStudents(cur,s) ){
+					for (Student s: sco.admitted){ 
+						if (sco.compare(cur,s)){
 							sco.admitted.remove(s);
 							Iterator<School> it = s.remaining.iterator();
-							if ( it.hasNext()) {temp.add(s);}
+							if(it.hasNext())
+								temp.add(s);
 							sco.admitted.add(cur);
+							cur.assignedSchool = sco;
 							if(sco.admittedInGroup.get(g) == null) {
 								HashSet<Student> grp = new HashSet<Student>();
 								grp.add(cur); sco.admittedInGroup.put(g, grp);
 							}
 							else
 								sco.admittedInGroup.get(g).add(cur);
-							cur.assignedSchool = sco;
 							break;
-						} // linear worst case search
+						} //shitty linear worst case search
 					}
 				}
 			}
 			else { //if the quota for the group is exceeded
 				for ( Student s: sco.admittedInGroup.get(g)){
-					if ( sco.compareStudents(cur,s) ) { 
-					sco.admitted.remove(s); temp.add(s);
+					if ( sco.compare(cur,s) ) { 
+					sco.admitted.remove(s); 
+					Iterator<School> it = s.remaining.iterator();
+					if(it.hasNext())
+						temp.add(s);
 					sco.admitted.add(cur);
+					cur.assignedSchool = sco;
 					sco.admittedInGroup.get(g).add(cur);
 					sco.admittedInGroup.get(g).remove(s); 
 					break;
-					} //  linear worst case search
+					} // shitty linear worst case search
 				}
 			}
 			
