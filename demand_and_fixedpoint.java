@@ -1,3 +1,30 @@
+public HashSet<Student> demand(School s, HashMap<School, Integer>p){
+		
+		HashSet<Student> demand = new HashSet<Student>();
+		for ( Student i: this.students ){
+		
+		boolean favoriteSchool=true;
+		for (School sco: this.schools){
+			if ((!s.equals(sco)) && sco.compare(i,sco.preferences.get(sco.preferences.size() -p.get(sco)))  && i.compareSchools(sco,s) )
+			{favoriteSchool = false;break;} 
+		}//add a comparison method "compareSchools" to Student
+		if ( s.compare(i,s.preferences.get(s.preferences.size()-p.get(s)))   && favoriteSchool ) {
+				demand.add(i); 
+			    
+				
+				}
+		}
+		
+		
+			return demand;
+		}
+
+
+
+
+
+
+
 public void fixedPoint(Constraint c){
 			for ( School s : this.schools) {s.admittedInGroup=new HashMap<Integer,HashSet<Student>>();}
 			// réinitialisation
