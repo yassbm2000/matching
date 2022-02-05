@@ -1,3 +1,4 @@
+package matching;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -22,7 +23,6 @@ public class Instance1 {
 		s2.preferences.add(i4); s2.preferences.add(i3); 
 		s2.preferences.add(i2); s2.preferences.add(i1);
 		HashSet<School> schools = new HashSet<School>();
-		s1.fairRanking(); s2.fairRanking();
 		schools.add(s1); schools.add(s2);
 		LinkedList<Student> students = new LinkedList<Student>();
 		students.add(i1); students.add(i2); students.add(i3); students.add(i4);
@@ -30,5 +30,6 @@ public class Instance1 {
 		Matching instance1 = new Matching(schools,students);
 		instance1.groupQuotaMatch();
 		System.out.println(instance1.toString());
+		
 	}
 }

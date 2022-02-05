@@ -1,3 +1,4 @@
+package matching;
 import java.util.*;
 public class Instance2 {
 	int n;
@@ -7,7 +8,8 @@ public class Instance2 {
 	public Instance2(int n) {
 		LinkedList<Student> students = new LinkedList<Student>();
 		this.rd = new Random();
-		int m = (int) 0.9*n;
+		double ke = Math.floor(0.9*n);
+		int m = (int)ke;
 		HashMap<Integer,Integer> quotas = new HashMap<Integer,Integer>();
 		quotas.put(1, m/4); quotas.put(2, m/4); //the groups are {1,2}
 		School s1 = new School("s1",n/4,quotas); School s2 = new School("s2",n/4,quotas);
@@ -44,9 +46,13 @@ public class Instance2 {
 	public static void main(String[] args) {
 		Instance2 test1 = new Instance2(20);
 		test1.match.basicCaseMatch();
+		System.out.println("Basic case match");
 		System.out.println(test1.match.toString());
 		test1.match.groupQuotaMatch();
+		System.out.println("Group quota match");
 		System.out.println(test1.match.toString());
+		System.out.println("Does the obtained matching satisfy the 4/5s rule");
+		System.out.println(test1.match.verify());
 		
 	}
 }

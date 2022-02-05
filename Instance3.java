@@ -1,3 +1,4 @@
+package matching;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,13 +52,23 @@ public class Instance3 {
 		this.match = new Matching(schools,students);
 	}
 	public static void main(String[] args) {
-		Instance2 test1 = new Instance2(20);
-		test1.match.groupQuotaMatch();
-		System.out.println(test1.match.toString());
+		Instance3 test1 = new Instance3(20);
 		Capacity c = new Capacity();
 		test1.match.fixedPoint(c);
 		System.out.println("Fixed point approach");
 		System.out.println(test1.match.toString());
+		test1.match.groupQuotaMatch();
+		System.out.println("Gale Shapley algorithm, group quota matching");
+		System.out.println(test1.match.toString());
+		test1.match.basicCaseMatch();
+		System.out.println("basic match");
+		System.out.println(test1.match.toString());
+		System.out.println("Does the obtained matching satisfy the 4/5s rule");
+		System.out.println(test1.match.verify());
+		
+		
+		
+		
 	}
 
 }
